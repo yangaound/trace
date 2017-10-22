@@ -75,7 +75,7 @@ class Trace:
 
 
 class Traceable(object):
-    __clsname__ = 'Traceable'
+    __clsname = 'Traceable'
 
     def this(self):
         return type_name(self)
@@ -84,9 +84,9 @@ class Traceable(object):
     def base(cls, level=0):
         cls = cls.__base__ if (level == 0) else cls
         if cls.__base__ == object:
-            raise AssertionError("There are no any classes has the attribute: '__clsname__'")
+            raise AssertionError("There are no any classes has the attribute: '__clsname'")
 
-        attr_name = '_' + cls.__name__ + '__clsname__'
+        attr_name = '_' + cls.__name__ + '__clsname'
         if hasattr(cls, attr_name):
-            return u"{ns}.{obj}".format(ns=cls.__module__, obj=getattr(cls, attr_name), )
+            return getattr(cls, attr_name)
         return cls.__base__.base(level + 1)
