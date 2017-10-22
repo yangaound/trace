@@ -19,7 +19,7 @@ def cls_from_stact(stack):
     else:
         clss = filter(lambda x: inspect.isclass(x) and hasattr(x, stack[3]), globals.values())
         if not clss:
-            raise BaseException()
+            raise AssertionError('No class object')
         if len(clss) > 1:
             raise AssertionError('Multiple classes has this method: %s' % str(clss))
         return clss[0]
@@ -40,16 +40,13 @@ class Trace:
             stack = caller_stack or Trace._caller_stack()
             cls = cls_from_stact(stack)
             return cls_name(cls)
-        except BaseException:
-            return Trace.module(stack) + '.' + stack[3]
         except KeyError:
             raise AssertionError('outside of context, no class object')
 
     @staticmethod
     def method(caller_stack=None):
         stack = caller_stack or Trace._caller_stack()
-        cls = cls_from_stact(stack)
-        return cls_name(cls) + '.' + stack[3]
+        return Trace.cls(stack) + '.' + stack[3]
 
     @staticmethod
     def module(caller_stack=None):
@@ -88,5 +85,5 @@ class Traceable(object):
 
         attr_name = '_' + cls.__name__ + '__clsname'
         if hasattr(cls, attr_name):
-            return getattr(cls, attr_name)
+            return cls.__module__ + '.' + getattr(cls, attr_name)
         return cls.__base__.base(level + 1)
