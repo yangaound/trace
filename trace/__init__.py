@@ -73,7 +73,7 @@ class Trace:
 
 class Traceable(object):
     __clsname = 'Traceable'
-
+	
     def this(self):
         return type_name(self)
 
